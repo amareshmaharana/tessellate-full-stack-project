@@ -9,6 +9,7 @@ import express, {
 } from "express";
 import cors from "cors";
 import session from "cookie-session";
+import passport from "passport";
 
 import { config } from "./config/app.config.js";
 import { connectDB } from "./config/db.config.js";
@@ -17,6 +18,8 @@ import { HTTP_STATUS } from "./config/http.config.js";
 import { asyncHandler } from "./middlewares/asyncHandler.middleware.js";
 import { BadRequestException } from "./utils/appError.js";
 import { ErrorCodeEnum } from "./enums/error-code.enum.js";
+import { authRoutes } from "./routes/auth.route.js";
+import "./config/passport.config.js";
 
 const app = express();
 const BASE_PATH = config.BASE_PATH;
@@ -35,6 +38,9 @@ app.use(
     sameSite: "lax",
   }),
 );
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use(
   cors({
@@ -55,6 +61,8 @@ app.get(
     });
   }),
 );
+
+app.use(`${BASE_PATH}/auth`, authRoutes);
 
 app.use(errorHandler);
 
