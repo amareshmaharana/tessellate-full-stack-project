@@ -35,8 +35,8 @@ export const loginOrCreateAccountService = async (data: {
 
       const account = new AccountModel({
         userId: user._id,
-        provider: provider.toLowerCase(),
-        providerId: providerId.toLowerCase(),
+        provider: provider,
+        providerId: providerId,
       });
       await account.save({ session });
 
@@ -58,7 +58,7 @@ export const loginOrCreateAccountService = async (data: {
 
       const member = new MemberModel({
         userId: user._id,
-        workspace: workspace._id,
+        workspaceId: workspace._id,
         role: ownerRole._id,
         joinedAt: new Date(),
       });
