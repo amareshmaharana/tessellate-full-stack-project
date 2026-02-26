@@ -13,16 +13,20 @@ import passport from "passport";
 
 import { config } from "./config/app.config.js";
 import { connectDB } from "./config/db.config.js";
-import { errorHandler } from "./middlewares/errorHandler.middleware.js";
 import { HTTP_STATUS } from "./config/http.config.js";
+import "./config/passport.config.js";
+
+import { errorHandler } from "./middlewares/errorHandler.middleware.js";
 import { asyncHandler } from "./middlewares/asyncHandler.middleware.js";
+import { isAuthenticated } from "./middlewares/isAuthenticated.middleware.js";
+
 import { BadRequestException } from "./utils/appError.js";
 import { ErrorCodeEnum } from "./enums/error-code.enum.js";
+
 import { authRoutes } from "./routes/auth.route.js";
-import "./config/passport.config.js";
 import { userRoutes } from "./routes/user.route.js";
-import { isAuthenticated } from "./middlewares/isAuthenticated.middleware.js";
 import { workspaceRoutes } from "./routes/workspace.route.js";
+import { memberRoutes } from "./routes/member.route.js";
 
 const app = express();
 const BASE_PATH = config.BASE_PATH;
@@ -65,10 +69,11 @@ app.get(
   }),
 );
 
-// Routes from here
+// Routes goes from here
 app.use(`${BASE_PATH}/auth`, authRoutes);
 app.use(`${BASE_PATH}/user`, isAuthenticated, userRoutes);
 app.use(`${BASE_PATH}/workspace`, isAuthenticated, workspaceRoutes);
+app.use(`${BASE_PATH}/member`, isAuthenticated, memberRoutes);
 
 app.use(errorHandler);
 
